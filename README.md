@@ -3,6 +3,23 @@
 **Domain:** Mental Health (Developer Well-being)  
 **Built for:** Google "Build with Gemma" Buildathon  
 
+---
+
+> [!NOTE]
+> ### 🤖 GEMMA 4: THE PRIVACY-FIRST COGNITIVE ENGINE
+> At the core of **Focus-Lock** is **Gemma 4**—running entirely locally to analyze real-time developer telemetry without compromising IP or data privacy.
+>
+> 🔒 **100% Offline Digital Phenotyping**  
+> Corporate policies strictly prohibit cloud-streaming developer telemetry (window states, keystroke rhythms, compile errors). Gemma 4 operates offline on-device, meaning **sensitive workspace telemetry never leaves the machine**.
+> 
+> ⚡ **Zero-Latency Semantic Diagnostics**  
+> Raw data streams (like keystroke jitter in milliseconds) are instantly processed by Gemma 4 into structured cognitive exhaustion tiers (*Nominal*, *Moderate*, *Critical Burst*) with near-zero latency.
+> 
+> 🛠️ **Deterministic Interception Protocols**  
+> Through specialized system prompting, Gemma 4 outputs strict JSON payloads containing step-by-step physical cooldown actions to help the developer break executive dysfunction loops.
+
+---
+
 ## 🛑 The Problem
 Developers experience intense cognitive burnout and executive dysfunction loops (e.g., hyper-fragmented window switching, compilation error spirals). By the time physical symptoms like headaches manifest, the cognitive crash has already happened. Furthermore, corporate developers cannot use cloud-based AI mental health tools because streaming active workspace telemetry to a third-party server is a massive security and IP violation.
 
@@ -18,14 +35,6 @@ When an executive dysfunction loop is detected, the system intercepts the behavi
 * **Behavioral Telemetry Matrix:** Simulates active tracking of developer friction metrics rather than relying on manual mood-logging.
 * **Deterministic JSON Structuring:** The backend utilizes strict prompting to force the LLM to output predictable, heavily structured JSON payloads for the frontend to render.
 * **Spatial UI Architecture:** A minimalist, high-contrast, geometric interface featuring glassmorphism, neon-blue accents, and fluid keyframe animations to simulate a native OS-level interceptor.
-
----
-
-## 🤖 Usecase of Gemma 4 in Focus-Lock
-In this system, **Gemma 4** acts as the local **Cognitive Decision Engine** rather than a general-purpose chat assistant. It serves three critical functions:
-* **Local Privacy-First Digital Phenotyping:** Corporate environments strictly prohibit uploading developer interaction telemetry (keystroke timing patterns, compilation error messages, workspace events) to third-party cloud APIs. Because Gemma 4 runs completely offline (via LM Studio or similar local inference engines), the telemetry never leaves the developer's local machine, guaranteeing absolute data privacy and security.
-* **High-Velocity Semantic Classification:** Telemetry data contains raw numerical vectors (such as typing jitter in milliseconds and window switching frequency). Gemma 4 dynamically maps this telemetry stream to human-readable cognitive exhaustion tiers (e.g., *Nominal*, *Moderate*, or *Critical Burst*) by analyzing the complex interplay of these metrics.
-* **Structured Response Formatting:** Gemma 4 acts as an intelligent controller that parses raw telemetry into a strict JSON schema containing categorized risk details and step-by-step physical cooldown actions (e.g., posture adjustments, deep breathing exercises). The local model uses strict system prompting to ensure consistent structural formatting for the frontend UI.
 
 ---
 
