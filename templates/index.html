@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Focus-Lock Core</title>
+    <style>
+        :root {
+            --bg: #050508;
+            --card-bg: rgba(15, 15, 25, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-glow: rgba(10, 132, 255, 0.2);
+            --neon: #0a84ff;
+            --text: #ffffff;
+            --muted: #636366;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* Telemetry Control Panel */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--neon);
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 18px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #aeaeaf;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.3);
+        }
+
+        .action-btn {
+            width: 100%;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:active {
+            opacity: 0.8;
+        }
+
+        /* Dynamic Matrix Radar Node */
+        .radar-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .pulse-ring {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--neon);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transition: all 0.5s ease;
+        }
+
+        .pulse-ring.processing {
+            animation: spin 1s infinite linear;
+            border-style: dashed;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Output Diagnostics */
+        .output-panel {
+            display: none;
+            margin-top: 10px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            background: rgba(255, 69, 58, 0.15);
+            color: #ff453a;
+        }
+
+        .risk-lbl {
+            font-size: 20px;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .steps-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #d1d1d6;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-num {
+            color: var(--neon);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>Focus-Lock Analytics</h1>
+        </header>
+
+        <div class="card">
+            <div class="card-title">Behavioral Telemetry Matrix</div>
+
+            <div class="control-group">
+                <div class="control-label"><span>Window Switching Rate</span><span id="swVal">12 / min</span></div>
+                <input type="range" id="switches" min="2" max="60" value="12"
+                    oninput="updateVal('swVal', this.value + ' / min')">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>Keystroke Cadence Jitter</span><span id="jtVal">24ms</span></div>
+                <input type="range" id="jitter" min="5" max="200" value="24"
+                    oninput="updateVal('jtVal', this.value + 'ms')">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>IDE Compilation Error Frequency</span><span id="erVal">2 / hr</span>
+                </div>
+                <input type="range" id="errors" min="0" max="20" value="2"
+                    oninput="updateVal('erVal', this.value + ' / hr')">
+            </div>
+
+            <div class="radar-box">
+                <div class="pulse-ring" id="radar"></div>
+            </div>
+
+            <button class="action-btn" onclick="evaluateTelemetry()">Inject Critical Overstimulation</button>
+        </div>
+
+        <div class="card output-panel" id="outputPanel">
+            <div class="tier-badge" id="tierBadge">Critical Burst</div>
+            <div class="risk-lbl" id="riskLabel">Evaluating neural coherence...</div>
+            <div class="steps-box">
+                <div class="card-title" style="margin-bottom:12px; color: var(--muted);">Interception Sequence</div>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateVal(id, val) { document.getElementById(id).innerText = val; }
+
+        async function evaluateTelemetry() {
+            const sw = document.getElementById('switches').value;
+            const jt = document.getElementById('jitter').value;
+            const er = document.getElementById('errors').value;
+
+            const radar = document.getElementById('radar');
+            const output = document.getElementById('outputPanel');
+
+            radar.className = "pulse-ring processing";
+            output.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ telemetry: `Switches: ${sw}, Typing Jitter: ${jt}ms, Error Rate: ${er}` })
+                });
+
+                const raw = await response.json();
+                let clean = raw.result.trim();
+                if (clean.startsWith("```json")) clean = clean.substring(7, clean.length - 3);
+                else if (clean.startsWith("```")) clean = clean.substring(3, clean.length - 3);
+
+                const data = JSON.parse(clean.trim());
+                radar.className = "pulse-ring";
+                renderDiagnostics(data);
+            } catch (e) {
+                radar.className = "pulse-ring";
+                alert("Inference timeout. Verify LM Studio gateway.");
+            }
+        }
+
+        function renderDiagnostics(data) {
+            const output = document.getElementById('outputPanel');
+            output.style.display = 'block';
+
+            document.getElementById('tierBadge').innerText = data.fatigue_tier;
+            document.getElementById('riskLabel').innerText = data.primary_cognitive_risk;
+
+            const container = document.getElementById('stepsContainer');
+            container.innerHTML = '';
+
+            data.lockdown_steps.forEach((step, idx) => {
+                const item = document.createElement('div');
+                item.className = 'step-item';
+                item.innerHTML = `<div class="step-num">0${idx + 1}</div><div>${step}</div>`;
+                container.appendChild(item);
+            });
+        }
+    </script>
+</body>
+
+</html>
