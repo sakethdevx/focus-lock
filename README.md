@@ -50,3 +50,14 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install fastapi uvicorn openai jinja2
+
+### 3. Run the Backend Server
+Start the Uvicorn development server:
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Once running, access the Focus-Lock Core dashboard in your web browser at:
+`http://localhost:8000`
+```,StartLine:51,TargetContent:
