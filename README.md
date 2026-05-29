@@ -21,6 +21,14 @@ When an executive dysfunction loop is detected, the system intercepts the behavi
 
 ---
 
+## 🤖 Usecase of Gemma 4 in Focus-Lock
+In this system, **Gemma 4** acts as the local **Cognitive Decision Engine** rather than a general-purpose chat assistant. It serves three critical functions:
+* **Local Privacy-First Digital Phenotyping:** Corporate environments strictly prohibit uploading developer interaction telemetry (keystroke timing patterns, compilation error messages, workspace events) to third-party cloud APIs. Because Gemma 4 runs completely offline (via LM Studio or similar local inference engines), the telemetry never leaves the developer's local machine, guaranteeing absolute data privacy and security.
+* **High-Velocity Semantic Classification:** Telemetry data contains raw numerical vectors (such as typing jitter in milliseconds and window switching frequency). Gemma 4 dynamically maps this telemetry stream to human-readable cognitive exhaustion tiers (e.g., *Nominal*, *Moderate*, or *Critical Burst*) by analyzing the complex interplay of these metrics.
+* **Structured Response Formatting:** Gemma 4 acts as an intelligent controller that parses raw telemetry into a strict JSON schema containing categorized risk details and step-by-step physical cooldown actions (e.g., posture adjustments, deep breathing exercises). The local model uses strict system prompting to ensure consistent structural formatting for the frontend UI.
+
+---
+
 ## 🛠️ Tech Stack
 * **Backend:** Python, FastAPI, Uvicorn
 * **AI / Inference:** Gemma 4 (Local GGUF), LM Studio, OpenAI Python SDK
@@ -60,4 +68,4 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
 Once running, access the Focus-Lock Core dashboard in your web browser at:
 `http://localhost:8000`
-```,StartLine:51,TargetContent:
+```
