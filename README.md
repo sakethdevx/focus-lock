@@ -41,7 +41,7 @@ Ensure you have Python 3.8+ installed.
 
 ```bash
 # Clone the repository
-git clone [https://github.com/yourusername/focus-lock.git](https://github.com/yourusername/focus-lock.git)
+git clone https://github.com/sakethdevx/focus-lock.git
 cd focus-lock
 
 # Create and activate a virtual environment (recommended)
